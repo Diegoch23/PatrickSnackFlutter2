@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import '../services/api_service.dart';
+import 'home_screen.dart';
+import 'scanner_screen.dart';
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passController = TextEditingController();
+  final _api = ApiService();
+  bool _isLoading = false;
+
+  void _handleLogin() async {
+    setState(() => _isLoading = true);
+    bool success = await _api.login(_emailController.text, _passController.text);
+    setState(() => _isLoading = false);
+
+    if (success) {
+      // Usamos pushReplacement para que el usuario no pueda volver al login con el botón de atrás
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (c) => HomeScreen())
+      );
+    }else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Credenciales incorrectas o cuenta deshabilitada"), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            colors: [Colors.orange[800]!, Colors.orange[400]!],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo circular inspirado en tu web
+            CircleAvatar(
+              radius: 60,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.fastfood, size: 60, color: Colors.orange[800]),
+            ),
+            SizedBox(height: 30),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(labelText: "Correo Electrónico", prefixIcon: Icon(Icons.email)),
+                      ),
+                      TextField(
+                        controller: _passController,
+                        obscureText: true,
+                        decoration: InputDecoration(labelText: "Contraseña", prefixIcon: Icon(Icons.lock)),
+                      ),
+                      SizedBox(height: 30),
+                      _isLoading
+                          ? CircularProgressIndicator()
+                          : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange[800],
+                          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        ),
+                        onPressed: _handleLogin,
+                        child: Text("INGRESAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

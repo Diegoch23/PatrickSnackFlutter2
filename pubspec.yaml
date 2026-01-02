@@ -33,7 +33,14 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
+  http: ^1.1.0            # Para conectar con Laravel
+  shared_preferences: ^2.2.1 # Para guardar el token de login
+  mobile_scanner: ^3.5.2     # Para usar la cámara y leer SKU
+  cupertino_icons: ^1.0.2
+  barcode_widget: ^2.0.4    # Para dibujar códigos de barras
+  path_provider: ^2.1.1     # Para encontrar rutas en el móvil
+  screenshot: ^3.0.0        # Para capturar el código y guardarlo como imagen
+  gal: ^2.1.0               # Para guardar imágenes en la galería
 
 dev_dependencies:
   flutter_test:
