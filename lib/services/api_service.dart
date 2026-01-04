@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  // IP para emulador Android: 10.0.2.2. Para teléfono real: usa tu IP local (ej. 192.168.1.50)
-  final String baseUrl = "http://192.168.101.4:8000/api";
+
+  final String baseUrl = "https://patricksnack.espe-projects.com/api";
 
   // Guardar el token de forma segura en el móvil
   Future<void> saveToken(String token) async {
