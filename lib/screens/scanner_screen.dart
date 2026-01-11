@@ -23,26 +23,22 @@ class _ScannerScreenState extends State<ScannerScreen> {
   }
 
   void _showStockDialog(String sku) {
-    _quantityController.text = "1"; // Valor por defecto
+    _quantityController.text = "1";
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text("SKU Detectado: $sku", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text("SKU: $sku"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Ingrese la cantidad personalizada:"),
-            SizedBox(height: 15),
+            Text("Ingrese cantidad:"),
             TextField(
               controller: _quantityController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Ejemplo: 5",
-                prefixIcon: Icon(Icons.edit),
-              ),
+              autofocus: true, // Para que el teclado salga automáticamente
+              decoration: InputDecoration(border: OutlineInputBorder()),
             ),
           ],
         ),
@@ -89,16 +85,37 @@ class _ScannerScreenState extends State<ScannerScreen> {
   }
 
   void _process(String sku, int qty) async {
-    // Se utiliza el método updateStock definido en tu ApiService
+    // Se utiliza el metodo updateStock definido en tu ApiService
     final result = await _api.updateStock(sku, qty);
 
     if (mounted) {
       Navigator.pop(context); // Cerrar diálogo
 
+// 2. LÓGICA DE COLOR DINÁMICA
+      // Determinamos el color basándonos en si el mensaje indica caché o éxito real
+      Color snackColor;
+      String message = result['message'] ?? "Operación exitosa";
+
+      if (message.contains("caché") || message.contains("localmente")) {
+        snackColor = Colors.blue; // Azul para indicar "Pendiente de sincronizar"
+      } else {
+        snackColor = qty > 0 ? Colors.green : Colors.orange[800]!; // Colores normales
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result['message'] ?? "Operación exitosa"),
-            backgroundColor: qty > 0 ? Colors.green : Colors.orange,
+            content: Row(
+              children: [
+                Icon(
+                  snackColor == Colors.blue ? Icons.cloud_off : Icons.check_circle,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 10),
+                Expanded(child: Text(message)),
+              ],
+            ),
+            backgroundColor: snackColor,
+            duration: Duration(seconds: 3),
           )
       );
 
