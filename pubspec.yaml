@@ -41,6 +41,9 @@ dependencies:
   path_provider: ^2.1.1     # Para encontrar rutas en el móvil
   screenshot: ^3.0.0        # Para capturar el código y guardarlo como imagen
   gal: ^2.1.0               # Para guardar imágenes en la galería
+  hive: ^2.2.3             # Base de datos local rápida
+  hive_flutter: ^1.1.0     # Soporte de Hive para Flutter
+  connectivity_plus: ^5.0.2 # Detecta si hay internet
 
 dev_dependencies:
   flutter_test:
