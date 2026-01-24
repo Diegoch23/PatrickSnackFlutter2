@@ -1,8 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 import 'home_screen.dart';
-import 'scanner_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,13 +16,15 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
   void _handleLogin() async {
+    final l10n = AppLocalizations.of(context)!;
+
     // 1. Verificar conexión antes de intentar loguear
     var connectivityResult = await (Connectivity().checkConnectivity());
 
     if (connectivityResult == ConnectivityResult.none) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Se requiere internet para el primer inicio de sesión."),
+          content: Text(l10n.internetRequired),
           backgroundColor: Colors.blueGrey,
         ),
       );
@@ -44,19 +46,21 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Credenciales incorrectas"), backgroundColor: Colors.red),
+          SnackBar(content: Text(l10n.invalidCredentials), backgroundColor: Colors.red),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error de conexión con Hostinger"), backgroundColor: Colors.red),
+        SnackBar(content: Text(l10n.connectionError), backgroundColor: Colors.red),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -69,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo circular inspirado en tu web
+            // Logo circular
             CircleAvatar(
               radius: 60,
               backgroundColor: Colors.white,
@@ -86,12 +90,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       TextField(
                         controller: _emailController,
-                        decoration: InputDecoration(labelText: "Correo Electrónico", prefixIcon: Icon(Icons.email)),
+                        decoration: InputDecoration(
+                            labelText: l10n.email,
+                            prefixIcon: Icon(Icons.email)
+                        ),
                       ),
                       TextField(
                         controller: _passController,
                         obscureText: true,
-                        decoration: InputDecoration(labelText: "Contraseña", prefixIcon: Icon(Icons.lock)),
+                        decoration: InputDecoration(
+                            labelText: l10n.password,
+                            prefixIcon: Icon(Icons.lock)
+                        ),
                       ),
                       SizedBox(height: 30),
                       _isLoading
@@ -103,7 +113,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         ),
                         onPressed: _handleLogin,
-                        child: Text("INGRESAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        child: Text(
+                            l10n.login,
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+                        ),
                       ),
                     ],
                   ),

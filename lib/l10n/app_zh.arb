@@ -1,0 +1,65 @@
+{
+  "@@locale": "zh",
+
+  "appTitle": "Patrik's Snack",
+  "selectLanguage": "选择语言",
+  "continueButton": "继续",
+  "cancel": "取消",
+
+  "loginTitle": "登录",
+  "email": "电子邮件",
+  "password": "密码",
+  "login": "登录",
+  "internetRequired": "首次登录需要互联网连接。",
+  "invalidCredentials": "凭据无效",
+  "connectionError": "与Hostinger的连接错误",
+
+  "homeTitle": "Patrik's Snack",
+  "homeGreeting": "你好👋",
+  "homeQuestion": "今天你想做什么？",
+  "logout": "登出",
+  "syncPending": "同步待处理",
+  "offlineMode": "离线模式已激活",
+  "pendingRecords": "您有 {count} 条本地保存的记录。",
+
+  "generateCodes": "生成代码",
+  "generateCodesSubtitle": "为产品创建条形码标签",
+  "scanProduct": "扫描产品",
+  "scanProductSubtitle": "记录入库或销售",
+  "inventory": "库存",
+  "inventorySubtitle": "查看当前库存",
+
+  "logoutDialogTitle": "登出",
+  "logoutDialogMessage": "您确定要退出系统吗？",
+  "exit": "退出",
+
+  "generatorTitle": "代码生成器",
+  "loading": "加载中...",
+  "noRecords": "未找到同步记录。",
+  "codeGenerated": "代码已生成",
+  "saveToGallery": "保存到相册",
+  "imageSaved": "图片保存成功",
+  "saveError": "保存图片时出错",
+
+  "scannerMode": "扫描模式",
+  "flashlight": "手电筒",
+  "rotate": "旋转",
+  "productDetected": "检测到产品",
+  "description": "描述：",
+  "identifier": "标识符（SKU）：",
+  "defineQuantity": "定义要处理的数量：",
+  "sale": "销售",
+  "entry": "入库",
+  "validationError": "⚠️ 验证错误：请输入大于0的数量",
+  "transactionCompleted": "交易完成",
+
+  "inventoryTitle": "Patrik's Snack 库存",
+  "searchPlaceholder": "按名称或SKU搜索...",
+  "noProducts": "未找到产品",
+  "offlineData": "显示本地数据（离线）",
+  "noConnectionNoCache": "无连接且无缓存数据",
+  "stock": "库存",
+  "category": "分类：",
+
+  "unknownProduct": "未知产品"
+}

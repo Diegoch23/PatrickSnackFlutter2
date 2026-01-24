@@ -1,0 +1,65 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "Patrik's Snack",
+  "selectLanguage": "Sprache auswählen",
+  "continueButton": "Fortsetzen",
+  "cancel": "Abbrechen",
+
+  "loginTitle": "Anmelden",
+  "email": "E-Mail",
+  "password": "Passwort",
+  "login": "ANMELDEN",
+  "internetRequired": "Internetverbindung für erste Anmeldung erforderlich.",
+  "invalidCredentials": "Ungültige Anmeldedaten",
+  "connectionError": "Verbindungsfehler mit Hostinger",
+
+  "homeTitle": "Patrik's Snack",
+  "homeGreeting": "Hallo👋",
+  "homeQuestion": "Was möchten Sie heute tun?",
+  "logout": "Abmelden",
+  "syncPending": "Ausstehende synchronisieren",
+  "offlineMode": "Offline-Modus aktiv",
+  "pendingRecords": "Sie haben {count} lokal gespeicherte Datensätze.",
+
+  "generateCodes": "Codes generieren",
+  "generateCodesSubtitle": "Barcode-Etiketten für Produkte erstellen",
+  "scanProduct": "Produkt scannen",
+  "scanProductSubtitle": "Eingänge oder Verkäufe registrieren",
+  "inventory": "Inventar",
+  "inventorySubtitle": "Aktuellen Bestand anzeigen",
+
+  "logoutDialogTitle": "Abmelden",
+  "logoutDialogMessage": "Sind Sie sicher, dass Sie das System verlassen möchten?",
+  "exit": "BEENDEN",
+
+  "generatorTitle": "Code-Generator",
+  "loading": "Laden...",
+  "noRecords": "Keine synchronisierten Datensätze gefunden.",
+  "codeGenerated": "Code generiert",
+  "saveToGallery": "In Galerie speichern",
+  "imageSaved": "Bild erfolgreich gespeichert",
+  "saveError": "Fehler beim Speichern des Bildes",
+
+  "scannerMode": "Scanner-Modus",
+  "flashlight": "Taschenlampe",
+  "rotate": "Drehen",
+  "productDetected": "Produkt erkannt",
+  "description": "BESCHREIBUNG:",
+  "identifier": "KENNUNG (SKU):",
+  "defineQuantity": "Zu verarbeitende Menge definieren:",
+  "sale": "VERKAUF",
+  "entry": "EINGANG",
+  "validationError": "⚠️ Validierungsfehler: Geben Sie eine Menge größer als 0 ein",
+  "transactionCompleted": "Transaktion abgeschlossen",
+
+  "inventoryTitle": "Patrik's Snack Inventar",
+  "searchPlaceholder": "Nach Name oder SKU suchen...",
+  "noProducts": "Keine Produkte gefunden",
+  "offlineData": "Lokale Daten anzeigen (Offline)",
+  "noConnectionNoCache": "Keine Verbindung und keine zwischengespeicherten Daten",
+  "stock": "BESTAND",
+  "category": "Kat:",
+
+  "unknownProduct": "Unbekanntes Produkt"
+}

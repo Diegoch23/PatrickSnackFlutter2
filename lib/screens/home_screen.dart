@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hive_flutter/hive_flutter.dart'; // Necesario para la reactividad de la BD local
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 import 'login_screen.dart';
 import 'generator_screen.dart';
@@ -14,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Instancia del servicio de comunicación con el Backend
   final ApiService _api = ApiService();
 
   @override
@@ -23,51 +23,42 @@ class _HomeScreenState extends State<HomeScreen> {
     _initializeSyncListeners();
   }
 
-  /// Configura los listeners para la sincronización automática de datos.
-  /// Se ejecuta al iniciar el widget.
   void _initializeSyncListeners() {
-    // 1. Listener de Conectividad:
-    // Detecta cambios en la red (WiFi/Datos) en tiempo real.
-    // Si se recupera la conexión, dispara la sincronización en segundo plano.
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result != ConnectivityResult.none) {
         _api.syncPendingData();
       }
     });
-
-    // 2. Sincronización Inicial:
-    // Intenta enviar datos pendientes apenas se abre la pantalla.
     _api.syncPendingData();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Usamos Scaffold con un color de fondo gris muy suave para resaltar las tarjetas
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FA), 
+      backgroundColor: Color(0xFFF5F7FA),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          "Patrik's Snack",
+          l10n.homeTitle,
           style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
-          // WIDGET REACTIVO: Icono de nube con contador
-          // Escucha cambios en la caja 'pending_sync' de Hive y se redibuja solo si es necesario.
           ValueListenableBuilder(
             valueListenable: Hive.box('pending_sync').listenable(),
             builder: (context, Box box, widget) {
               if (box.isEmpty) return SizedBox.shrink();
-              
+
               return Stack(
                 alignment: Alignment.center,
                 children: [
                   IconButton(
                     icon: Icon(Icons.cloud_upload_outlined, color: Colors.blueAccent),
                     onPressed: () => _api.syncPendingData(),
-                    tooltip: "Sincronizar pendientes",
+                    tooltip: l10n.syncPending,
                   ),
                   Positioned(
                     right: 8,
@@ -90,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
             icon: Icon(Icons.logout, color: Colors.black54),
-            tooltip: "Cerrar Sesión",
+            tooltip: l10n.logout,
             onPressed: () => _showLogoutDialog(context),
           )
         ],
@@ -100,24 +91,22 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Header de Bienvenida
             Text(
-              "Hola👋",
+              l10n.homeGreeting,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blueGrey[800]),
             ),
             Text(
-              "¿Qué deseas hacer hoy?",
+              l10n.homeQuestion,
               style: TextStyle(fontSize: 16, color: Colors.blueGrey[400]),
             ),
-            
+
             SizedBox(height: 25),
 
-            // 2. Tarjeta de Aviso de Sincronización (Diseño condicional)
             ValueListenableBuilder(
               valueListenable: Hive.box('pending_sync').listenable(),
               builder: (context, Box box, widget) {
                 if (box.isEmpty) return SizedBox.shrink();
-                
+
                 return Container(
                   margin: EdgeInsets.only(bottom: 25),
                   padding: EdgeInsets.all(15),
@@ -141,10 +130,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Modo Offline Activo", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange[900])),
+                            Text(l10n.offlineMode, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange[900])),
                             SizedBox(height: 4),
                             Text(
-                              "Tienes ${box.length} registros guardados localmente.",
+                              l10n.pendingRecords(box.length),
                               style: TextStyle(fontSize: 12, color: Colors.orange[800]),
                             ),
                           ],
@@ -156,26 +145,25 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
 
-            // 3. Menú de Opciones (Tarjetas con Gradiente)
             _buildDashboardCard(
               context,
-              title: "Generar Códigos",
-              subtitle: "Crea etiquetas en barra para productos",
+              title: l10n.generateCodes,
+              subtitle: l10n.generateCodesSubtitle,
               icon: Icons.qr_code_2,
-              startColor: Color(0xFF4FACFE), // Azul claro
-              endColor: Color(0xFF00F2FE),   // Cyan
+              startColor: Color(0xFF4FACFE),
+              endColor: Color(0xFF00F2FE),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => GeneratorScreen())),
             ),
-            
+
             SizedBox(height: 20),
-            
+
             _buildDashboardCard(
               context,
-              title: "Escanear Producto",
-              subtitle: "Registra entradas o ventas",
+              title: l10n.scanProduct,
+              subtitle: l10n.scanProductSubtitle,
               icon: Icons.qr_code_scanner,
-              startColor: Color(0xFFFA709A), // Rosa/Naranja
-              endColor: Color(0xFFFEE140),   // Amarillo
+              startColor: Color(0xFFFA709A),
+              endColor: Color(0xFFFEE140),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => ScannerScreen())),
             ),
 
@@ -183,11 +171,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
             _buildDashboardCard(
               context,
-              title: "Inventario",
-              subtitle: "Visualiza el stock actual",
+              title: l10n.inventory,
+              subtitle: l10n.inventorySubtitle,
               icon: Icons.inventory_2_outlined,
-              startColor: Color(0xFF43E97B), // Verde
-              endColor: Color(0xFF38F9D7),   // Turquesa
+              startColor: Color(0xFF43E97B),
+              endColor: Color(0xFF38F9D7),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => StockViewScreen())),
             ),
           ],
@@ -196,8 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Widget modular para construir tarjetas de menú con diseño consistente.
-  /// Utiliza [InkWell] para la respuesta táctil y [Container] con [LinearGradient] para la estética.
   Widget _buildDashboardCard(BuildContext context, {
     required String title,
     required String subtitle,
@@ -232,7 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             child: Row(
               children: [
-                // Icono dentro de un círculo blanco semitransparente
                 Container(
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -242,7 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Icon(icon, color: Colors.white, size: 28),
                 ),
                 SizedBox(width: 20),
-                // Textos
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -277,19 +261,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Muestra un diálogo de confirmación antes de cerrar la sesión.
-  /// Limpia las credenciales almacenadas en [SharedPreferences].
   void _showLogoutDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        title: Text("Cerrar Sesión"),
-        content: Text("¿Estás seguro de que deseas salir del sistema?"),
+        title: Text(l10n.logoutDialogTitle),
+        content: Text(l10n.logoutDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("CANCELAR", style: TextStyle(color: Colors.grey)),
+            child: Text(l10n.cancel.toUpperCase(), style: TextStyle(color: Colors.grey)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -297,18 +281,16 @@ class _HomeScreenState extends State<HomeScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () async {
-              // Limpieza de sesión local
               final prefs = await SharedPreferences.getInstance();
               await prefs.remove('token');
-              
-              // Navegación al Login eliminando el historial de rutas
+
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (c) => LoginScreen()),
-                (route) => false,
+                    (route) => false,
               );
             },
-            child: Text("SALIR", style: TextStyle(color: Colors.white)),
+            child: Text(l10n.exit, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

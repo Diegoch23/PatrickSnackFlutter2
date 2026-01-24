@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart'; // Añadir para caché local
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 
 class StockViewScreen extends StatefulWidget {
@@ -10,12 +11,10 @@ class StockViewScreen extends StatefulWidget {
 
 class _StockViewScreenState extends State<StockViewScreen> {
   final ApiService _api = ApiService();
-
-  // Abrimos la caja de Hive para productos
   final Box _productsBox = Hive.box('products_cache');
 
-  List<dynamic> allProducts = []; // Lista original de la API
-  List<dynamic> filteredProducts = []; // Lista que se muestra al buscar
+  List<dynamic> allProducts = [];
+  List<dynamic> filteredProducts = [];
   bool isLoading = true;
   String searchQuery = "";
 
@@ -25,18 +24,15 @@ class _StockViewScreenState extends State<StockViewScreen> {
     _loadStock();
   }
 
-  // Cargar datos desde la API de Laravel
   Future<void> _loadStock() async {
     setState(() => isLoading = true);
 
-    // 1. Intentar cargar desde la API
     var connectivityResult = await (Connectivity().checkConnectivity());
 
     if (connectivityResult != ConnectivityResult.none) {
       try {
         final data = await _api.getProducts();
 
-        // GUARDAR EN CACHÉ LOCAL para uso offline futuro
         await _productsBox.put('list', data);
         await _productsBox.put('last_update', DateTime.now().toIso8601String());
         if (mounted) {
@@ -51,7 +47,7 @@ class _StockViewScreenState extends State<StockViewScreen> {
         print("Error API, intentando cargar caché...");
       }
     }
-    // 2. SI NO HAY RED O FALLA LA API: Cargar desde Hive
+
     final cachedData = _productsBox.get('list');
     if (cachedData != null) {
       setState(() {
@@ -59,21 +55,28 @@ class _StockViewScreenState extends State<StockViewScreen> {
         filteredProducts = allProducts;
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Mostrando datos locales (Offline)"),
-          backgroundColor: Colors.blueGrey,
-        ),
-      );
+
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.offlineData),
+            backgroundColor: Colors.blueGrey,
+          ),
+        );
+      }
     } else {
       setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Sin conexión y sin datos en caché")),
-      );
+
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.noConnectionNoCache)),
+        );
+      }
     }
   }
 
-  // Función para filtrar localmente (UX rápida)
   void _filterSearch(String query) {
     setState(() {
       searchQuery = query;
@@ -87,21 +90,22 @@ class _StockViewScreenState extends State<StockViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Inventario Patrik's Snack"),
+        title: Text(l10n.inventoryTitle),
         backgroundColor: Colors.orange[800],
         foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
-          // Barra de búsqueda superior
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextField(
               onChanged: _filterSearch,
               decoration: InputDecoration(
-                labelText: "Buscar por nombre o SKU...",
+                labelText: l10n.searchPlaceholder,
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -112,14 +116,13 @@ class _StockViewScreenState extends State<StockViewScreen> {
             ),
           ),
 
-          // Lista de productos
           Expanded(
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
                 : RefreshIndicator(
-              onRefresh: _loadStock, // Tirar hacia abajo para actualizar
+              onRefresh: _loadStock,
               child: filteredProducts.isEmpty
-                  ? Center(child: Text("No se encontraron productos"))
+                  ? Center(child: Text(l10n.noProducts))
                   : ListView.builder(
                 padding: EdgeInsets.only(bottom: 20),
                 itemCount: filteredProducts.length,
@@ -136,7 +139,6 @@ class _StockViewScreenState extends State<StockViewScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Fila 1: Nombre del producto
                           Text(
                             p['name'],
                             style: TextStyle(
@@ -148,23 +150,20 @@ class _StockViewScreenState extends State<StockViewScreen> {
                           SizedBox(height: 5),
                           Divider(color: Colors.orange[100]),
 
-                          // Fila 2: Detalles distribuidos verticalmente para móvil
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Datos a la izquierda
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     _infoRow(Icons.tag, "SKU: ${p['sku']}"),
                                     SizedBox(height: 4),
-                                    _infoRow(Icons.category, "Cat: ${p['category']['name']}"),
+                                    _infoRow(Icons.category, "${l10n.category} ${p['category']['name']}"),
                                   ],
                                 ),
                               ),
 
-                              // Badge de Stock a la derecha
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 decoration: BoxDecoration(
@@ -177,7 +176,7 @@ class _StockViewScreenState extends State<StockViewScreen> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      "STOCK",
+                                      l10n.stock,
                                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                                     ),
                                     Text(
@@ -206,7 +205,6 @@ class _StockViewScreenState extends State<StockViewScreen> {
     );
   }
 
-  // Widget auxiliar para las filas de información con iconos pequeños
   Widget _infoRow(IconData icon, String text) {
     return Row(
       children: [

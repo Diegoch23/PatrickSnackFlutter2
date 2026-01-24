@@ -1,0 +1,65 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Patrik's Snack",
+  "selectLanguage": "Select Language",
+  "continueButton": "Continue",
+  "cancel": "Cancel",
+
+  "loginTitle": "Login",
+  "email": "Email",
+  "password": "Password",
+  "login": "LOGIN",
+  "internetRequired": "Internet connection required for first login.",
+  "invalidCredentials": "Invalid credentials",
+  "connectionError": "Connection error with Hostinger",
+
+  "homeTitle": "Patrik's Snack",
+  "homeGreeting": "Hello👋",
+  "homeQuestion": "What would you like to do today?",
+  "logout": "Logout",
+  "syncPending": "Sync pending",
+  "offlineMode": "Offline Mode Active",
+  "pendingRecords": "You have {count} records saved locally.",
+
+  "generateCodes": "Generate Codes",
+  "generateCodesSubtitle": "Create barcode labels for products",
+  "scanProduct": "Scan Product",
+  "scanProductSubtitle": "Register entries or sales",
+  "inventory": "Inventory",
+  "inventorySubtitle": "View current stock",
+
+  "logoutDialogTitle": "Logout",
+  "logoutDialogMessage": "Are you sure you want to exit the system?",
+  "exit": "EXIT",
+
+  "generatorTitle": "Code Generator",
+  "loading": "Loading...",
+  "noRecords": "No synchronized records found.",
+  "codeGenerated": "Code Generated",
+  "saveToGallery": "Save to Gallery",
+  "imageSaved": "Image saved successfully",
+  "saveError": "Error saving image",
+
+  "scannerMode": "Scanner Mode",
+  "flashlight": "Flashlight",
+  "rotate": "Rotate",
+  "productDetected": "Product Detected",
+  "description": "DESCRIPTION:",
+  "identifier": "IDENTIFIER (SKU):",
+  "defineQuantity": "Define quantity to process:",
+  "sale": "SALE",
+  "entry": "ENTRY",
+  "validationError": "⚠️ Validation Error: Enter a quantity greater than 0",
+  "transactionCompleted": "Transaction completed",
+
+  "inventoryTitle": "Patrik's Snack Inventory",
+  "searchPlaceholder": "Search by name or SKU...",
+  "noProducts": "No products found",
+  "offlineData": "Showing local data (Offline)",
+  "noConnectionNoCache": "No connection and no cached data",
+  "stock": "STOCK",
+  "category": "Cat:",
+
+  "unknownProduct": "Unknown Product"
+}

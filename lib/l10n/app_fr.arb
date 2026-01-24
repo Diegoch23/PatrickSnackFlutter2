@@ -1,0 +1,65 @@
+{
+  "@@locale": "fr",
+
+  "appTitle": "Patrik's Snack",
+  "selectLanguage": "Sélectionner la langue",
+  "continueButton": "Continuer",
+  "cancel": "Annuler",
+
+  "loginTitle": "Se connecter",
+  "email": "E-mail",
+  "password": "Mot de passe",
+  "login": "CONNEXION",
+  "internetRequired": "Connexion Internet requise pour la première connexion.",
+  "invalidCredentials": "Identifiants invalides",
+  "connectionError": "Erreur de connexion avec Hostinger",
+
+  "homeTitle": "Patrik's Snack",
+  "homeGreeting": "Bonjour👋",
+  "homeQuestion": "Que souhaitez-vous faire aujourd'hui?",
+  "logout": "Déconnexion",
+  "syncPending": "Synchroniser en attente",
+  "offlineMode": "Mode hors ligne actif",
+  "pendingRecords": "Vous avez {count} enregistrements sauvegardés localement.",
+
+  "generateCodes": "Générer des codes",
+  "generateCodesSubtitle": "Créer des étiquettes de codes-barres pour les produits",
+  "scanProduct": "Scanner le produit",
+  "scanProductSubtitle": "Enregistrer les entrées ou les ventes",
+  "inventory": "Inventaire",
+  "inventorySubtitle": "Voir le stock actuel",
+
+  "logoutDialogTitle": "Déconnexion",
+  "logoutDialogMessage": "Êtes-vous sûr de vouloir quitter le système?",
+  "exit": "SORTIR",
+
+  "generatorTitle": "Générateur de codes",
+  "loading": "Chargement...",
+  "noRecords": "Aucun enregistrement synchronisé trouvé.",
+  "codeGenerated": "Code généré",
+  "saveToGallery": "Enregistrer dans la galerie",
+  "imageSaved": "Image enregistrée avec succès",
+  "saveError": "Erreur lors de l'enregistrement de l'image",
+
+  "scannerMode": "Mode scanner",
+  "flashlight": "Lampe de poche",
+  "rotate": "Rotation",
+  "productDetected": "Produit détecté",
+  "description": "DESCRIPTION:",
+  "identifier": "IDENTIFIANT (SKU):",
+  "defineQuantity": "Définir la quantité à traiter:",
+  "sale": "VENTE",
+  "entry": "ENTRÉE",
+  "validationError": "⚠️ Erreur de validation: Entrez une quantité supérieure à 0",
+  "transactionCompleted": "Transaction terminée",
+
+  "inventoryTitle": "Inventaire Patrik's Snack",
+  "searchPlaceholder": "Rechercher par nom ou SKU...",
+  "noProducts": "Aucun produit trouvé",
+  "offlineData": "Affichage des données locales (Hors ligne)",
+  "noConnectionNoCache": "Pas de connexion et pas de données en cache",
+  "stock": "STOCK",
+  "category": "Cat:",
+
+  "unknownProduct": "Produit inconnu"
+}
