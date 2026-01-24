@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import 'home_screen.dart';
@@ -15,19 +16,41 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
   void _handleLogin() async {
-    setState(() => _isLoading = true);
-    bool success = await _api.login(_emailController.text, _passController.text);
-    setState(() => _isLoading = false);
+    // 1. Verificar conexión antes de intentar loguear
+    var connectivityResult = await (Connectivity().checkConnectivity());
 
-    if (success) {
-      // Usamos pushReplacement para que el usuario no pueda volver al login con el botón de atrás
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (c) => HomeScreen())
-      );
-    }else {
+    if (connectivityResult == ConnectivityResult.none) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Credenciales incorrectas o cuenta deshabilitada"), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text("Se requiere internet para el primer inicio de sesión."),
+          backgroundColor: Colors.blueGrey,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // 2. Intentar login contra la API de Laravel
+      bool success = await _api.login(_emailController.text, _passController.text);
+      setState(() => _isLoading = false);
+
+      if (success) {
+        // Al tener éxito, el token ya se guarda dentro de api.login
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (c) => HomeScreen())
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Credenciales incorrectas"), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error de conexión con Hostinger"), backgroundColor: Colors.red),
       );
     }
   }

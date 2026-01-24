@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart'; // Añadir para caché local
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../services/api_service.dart';
 
 class StockViewScreen extends StatefulWidget {
@@ -8,6 +10,9 @@ class StockViewScreen extends StatefulWidget {
 
 class _StockViewScreenState extends State<StockViewScreen> {
   final ApiService _api = ApiService();
+
+  // Abrimos la caja de Hive para productos
+  final Box _productsBox = Hive.box('products_cache');
 
   List<dynamic> allProducts = []; // Lista original de la API
   List<dynamic> filteredProducts = []; // Lista que se muestra al buscar
@@ -22,17 +27,48 @@ class _StockViewScreenState extends State<StockViewScreen> {
 
   // Cargar datos desde la API de Laravel
   Future<void> _loadStock() async {
-    try {
-      final data = await _api.getProducts();
+    setState(() => isLoading = true);
+
+    // 1. Intentar cargar desde la API
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if (connectivityResult != ConnectivityResult.none) {
+      try {
+        final data = await _api.getProducts();
+
+        // GUARDAR EN CACHÉ LOCAL para uso offline futuro
+        await _productsBox.put('list', data);
+        await _productsBox.put('last_update', DateTime.now().toIso8601String());
+        if (mounted) {
+          setState(() {
+            allProducts = data;
+            filteredProducts = data;
+            isLoading = false;
+          });
+        }
+        return;
+      } catch (e) {
+        print("Error API, intentando cargar caché...");
+      }
+    }
+    // 2. SI NO HAY RED O FALLA LA API: Cargar desde Hive
+    final cachedData = _productsBox.get('list');
+    if (cachedData != null) {
       setState(() {
-        allProducts = data;
-        filteredProducts = data;
+        allProducts = List<dynamic>.from(cachedData);
+        filteredProducts = allProducts;
         isLoading = false;
       });
-    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Mostrando datos locales (Offline)"),
+          backgroundColor: Colors.blueGrey,
+        ),
+      );
+    } else {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al conectar con el servidor")),
+        SnackBar(content: Text("Sin conexión y sin datos en caché")),
       );
     }
   }
